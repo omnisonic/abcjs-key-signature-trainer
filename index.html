@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Key Signature Trainer</title>
+    <script src="https://cdn.jsdelivr.net/npm/abcjs@6.0.0/dist/abcjs-basic-min.js"></script>
+    <script>
+        const keys = [
+            {name: 'C Major / A minor', accidental: '', num: 0},
+            {name: 'G Major / E minor', accidental: '#', num: 1},
+            {name: 'D Major / B minor', accidental: '#', num: 2},
+            {name: 'A Major / F# minor', accidental: '#', num: 3},
+            {name: 'E Major / C# minor', accidental: '#', num: 4},
+            {name: 'B Major / G# minor', accidental: '#', num: 5},
+            {name: 'F# Major / D# minor', accidental: '#', num: 6},
+            {name: 'Db Major / Bb minor', accidental: 'b', num: 5}
+        ];
+        
+        function generateKeySignature() {
+            const randomIndex = Math.floor(Math.random() * keys.length);
+            const key = keys[randomIndex];
+            const staff = `X:1\nK:${key.name}\nL:1/4\n|:`;
+            
+            ABCJS.renderAbc("staff", staff);
+        }
+    </script>
+</head>
+<body>
+    <h1>Key Signature Trainer</h1>
+
+    <div id="staff"></div>
+    <button onclick="generateKeySignature()">New Key</button>
+</body>
+</html>
