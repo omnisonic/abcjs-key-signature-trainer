@@ -7,68 +7,92 @@
     <script src="script.js" defer></script>
 </head>
 <body>
-    <div class="container">
-        <div class="exercise-selector">
-            <label>
-                <input type="radio" name="exercise" value="key-signature" checked onchange="changeExercise()">
-                Key Signature
-            </label>
-            <label>
-                <input type="radio" name="exercise" value="note" onchange="changeExercise()">
-                Note
-            </label>
+    <div class="app-container">
+        <header>
+            <h1>Key Signature Trainer</h1>
+        </header>
+        <div class="main-layout">
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <h3>Exercise Type</h3>
+                    <div class="exercise-selector">
+                        <label>
+                            <input type="radio" name="exercise" value="key-signature" checked onchange="changeExercise()">
+                            Key Signature
+                        </label>
+                        <label>
+                            <input type="radio" name="exercise" value="note" onchange="changeExercise()">
+                            Note
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="sidebar-section">
+                    <h3>Key Selection</h3>
+                    <div class="key-selector">
+                        <div class="key-checkbox">
+                            <input type="checkbox" id="key-all" checked onchange="toggleAllKeys()">
+                            <label for="key-all">All Keys</label>
+                        </div>
+                        <div class="key-checkbox">
+                            <input type="checkbox" id="key-0" checked onchange="toggleKey(0)">
+                            <label for="key-0">C Major / A minor</label>
+                        </div>
+                        <div class="key-checkbox">
+                            <input type="checkbox" id="key-1" checked onchange="toggleKey(1)">
+                            <label for="key-1">G Major / E minor</label>
+                        </div>
+                        <div class="key-checkbox">
+                            <input type="checkbox" id="key-2" checked onchange="toggleKey(2)">
+                            <label for="key-2">D Major / B minor</label>
+                        </div>
+                        <div class="key-checkbox">
+                            <input type="checkbox" id="key-3" checked onchange="toggleKey(3)">
+                            <label for="key-3">A Major / F# minor</label>
+                        </div>
+                        <div class="key-checkbox">
+                            <input type="checkbox" id="key-4" checked onchange="toggleKey(4)">
+                            <label for="key-4">E Major / C# minor</label>
+                        </div>
+                        <div class="key-checkbox">
+                            <input type="checkbox" id="key-5" checked onchange="toggleKey(5)">
+                            <label for="key-5">B Major / G# minor</label>
+                        </div>
+                        <div class="key-checkbox">
+                            <input type="checkbox" id="key-6" checked onchange="toggleKey(6)">
+                            <label for="key-6">F# Major / D# minor</label>
+                        </div>
+                        <div class="key-checkbox">
+                            <input type="checkbox" id="key-7" checked onchange="toggleKey(7)">
+                            <label for="key-7">Db Major / Bb minor</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="sidebar-section">
+                    <h3>Timing Controls</h3>
+                    <div class="duration-controls">
+                        <div class="slider-container">
+                            <label for="staff-duration">Staff Duration: <span id="staff-duration-value" class="slider-value">5s</span></label>
+                            <input type="range" id="staff-duration" min="1" max="5" step="0.5" value="5" oninput="updateStaffDuration()">
+                        </div>
+                        <div class="slider-container">
+                            <label for="answer-duration">Answer Duration: <span id="answer-duration-value" class="slider-value">1s</span></label>
+                            <input type="range" id="answer-duration" min="1" max="5" step="0.5" value="1" oninput="updateAnswerDuration()">
+                        </div>
+                    </div>
+                </div>
+            </aside>
+            
+            <main class="content-area">
+                <div class="staff-container">
+                    <div id="staff"></div>
+                </div>
+                <div class="answer-container">
+                    <div id="answer"></div>
+                </div>
+            </main>
         </div>
-        <div class="key-selector">
-            <div class="key-checkbox">
-                <input type="checkbox" id="key-all" checked onchange="toggleAllKeys()">
-                <label for="key-all">All Keys</label>
-            </div>
-            <div class="key-checkbox">
-                <input type="checkbox" id="key-0" checked onchange="toggleKey(0)">
-                <label for="key-0">C Major / A minor</label>
-            </div>
-            <div class="key-checkbox">
-                <input type="checkbox" id="key-1" checked onchange="toggleKey(1)">
-                <label for="key-1">G Major / E minor</label>
-            </div>
-            <div class="key-checkbox">
-                <input type="checkbox" id="key-2" checked onchange="toggleKey(2)">
-                <label for="key-2">D Major / B minor</label>
-            </div>
-            <div class="key-checkbox">
-                <input type="checkbox" id="key-3" checked onchange="toggleKey(3)">
-                <label for="key-3">A Major / F# minor</label>
-            </div>
-            <div class="key-checkbox">
-                <input type="checkbox" id="key-4" checked onchange="toggleKey(4)">
-                <label for="key-4">E Major / C# minor</label>
-            </div>
-            <div class="key-checkbox">
-                <input type="checkbox" id="key-5" checked onchange="toggleKey(5)">
-                <label for="key-5">B Major / G# minor</label>
-            </div>
-            <div class="key-checkbox">
-                <input type="checkbox" id="key-6" checked onchange="toggleKey(6)">
-                <label for="key-6">F# Major / D# minor</label>
-            </div>
-            <div class="key-checkbox">
-                <input type="checkbox" id="key-7" checked onchange="toggleKey(7)">
-                <label for="key-7">Db Major / Bb minor</label>
-            </div>
-        </div>
-        <h1>Key Signature Trainer</h1>
-        <div class="duration-controls">
-            <div class="slider-container">
-                <label for="staff-duration">Staff Duration: <span id="staff-duration-value" class="slider-value">5s</span></label>
-                <input type="range" id="staff-duration" min="1" max="5" step="0.5" value="5" oninput="updateStaffDuration()">
-            </div>
-            <div class="slider-container">
-                <label for="answer-duration">Answer Duration: <span id="answer-duration-value" class="slider-value">1s</span></label>
-                <input type="range" id="answer-duration" min="1" max="5" step="0.5" value="1" oninput="updateAnswerDuration()">
-            </div>
-        </div>
-        <div id="staff"></div>
-        <div id="answer"></div>
     </div>
 </body>
 </html>

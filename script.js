@@ -1,12 +1,12 @@
 const keys = [
-    {name: 'C Major / A minor', accidental: '', num: 0, rootNote: 'C'},
-    {name: 'G Major / E minor', accidental: '#', num: 1, rootNote: 'G'},
-    {name: 'D Major / B minor', accidental: '#', num: 2, rootNote: 'D'},
-    {name: 'A Major / F# minor', accidental: '#', num: 3, rootNote: 'A'},
-    {name: 'E Major / C# minor', accidental: '#', num: 4, rootNote: 'E'},
-    {name: 'B Major / G# minor', accidental: '#', num: 5, rootNote: 'B'},
-    {name: 'F# Major / D# minor', accidental: '#', num: 6, rootNote: 'F#'},
-    {name: 'Db Major / Bb minor', accidental: 'b', num: 5, rootNote: 'Db'}
+    {name: 'C Major / A minor', abcKey: 'C', accidental: '', num: 0, rootNote: 'C'},
+    {name: 'G Major / E minor', abcKey: 'G', accidental: '#', num: 1, rootNote: 'G'},
+    {name: 'D Major / B minor', abcKey: 'D', accidental: '#', num: 2, rootNote: 'D'},
+    {name: 'A Major / F# minor', abcKey: 'A', accidental: '#', num: 3, rootNote: 'A'},
+    {name: 'E Major / C# minor', abcKey: 'E', accidental: '#', num: 4, rootNote: 'E'},
+    {name: 'B Major / G# minor', abcKey: 'B', accidental: '#', num: 5, rootNote: 'B'},
+    {name: 'F# Major / D# minor', abcKey: 'F#', accidental: '#', num: 6, rootNote: 'F#'},
+    {name: 'Db Major / Bb minor', abcKey: 'Db', accidental: 'b', num: 5, rootNote: 'Db'}
 ];
 
 const solfegeSeries = ['do', 're', 'mi', 'fa', 'sol', 'la', 'ti'];
@@ -32,7 +32,7 @@ function generateExercise() {
     let staff, note;
 
     if (currentExercise === 'key-signature') {
-        staff = `X:1\nK:${key.name}\nL:1/4\n|:`;
+        staff = `X:1\nK:${key.abcKey}\nL:1/4\n|:`;
         note = '';
     } else {
         // Generate a random note
@@ -40,7 +40,7 @@ function generateExercise() {
         const randomNote = noteSequence[randomNoteIndex];
         const solfege = getMovableDo(key, randomNote);
         
-        staff = `X:1\nK:${key.name}\nL:1/4\n[${randomNote}]`;
+        staff = `X:1\nK:${key.abcKey}\nL:1/4\n[${randomNote}]`;
         note = solfege;
     }
     
@@ -49,7 +49,10 @@ function generateExercise() {
     document.getElementById("answer").textContent = '';
     
     // Render staff
-    ABCJS.renderAbc("staff", staff);
+    ABCJS.renderAbc("staff", staff, {
+        scale: 2.0,
+        add_classes: true
+    });
     
     // Clear any existing answer timeout
     if (answerTimeout) {
