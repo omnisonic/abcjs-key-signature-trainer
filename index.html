@@ -3,31 +3,128 @@
 <head>
     <title>Key Signature Trainer</title>
     <script src="https://cdn.jsdelivr.net/npm/abcjs@6.0.0/dist/abcjs-basic-min.js"></script>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        #staff {
+            transform: scale(1.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 150px;
+        }
+        #staff svg {
+            margin: 0 auto;
+        }
+        #answer {
+            min-height: 30px;
+        }
+        .exercise-selector {
+            margin-bottom: 20px;
+        }
+    </style>
     <script>
         const keys = [
-            {name: 'C Major / A minor', accidental: '', num: 0},
-            {name: 'G Major / E minor', accidental: '#', num: 1},
-            {name: 'D Major / B minor', accidental: '#', num: 2},
-            {name: 'A Major / F# minor', accidental: '#', num: 3},
-            {name: 'E Major / C# minor', accidental: '#', num: 4},
-            {name: 'B Major / G# minor', accidental: '#', num: 5},
-            {name: 'F# Major / D# minor', accidental: '#', num: 6},
-            {name: 'Db Major / Bb minor', accidental: 'b', num: 5}
+            {name: 'C Major / A minor', accidental: '', num: 0, rootNote: 'C'},
+            {name: 'G Major / E minor', accidental: '#', num: 1, rootNote: 'G'},
+            {name: 'D Major / B minor', accidental: '#', num: 2, rootNote: 'D'},
+            {name: 'A Major / F# minor', accidental: '#', num: 3, rootNote: 'A'},
+            {name: 'E Major / C# minor', accidental: '#', num: 4, rootNote: 'E'},
+            {name: 'B Major / G# minor', accidental: '#', num: 5, rootNote: 'B'},
+            {name: 'F# Major / D# minor', accidental: '#', num: 6, rootNote: 'F#'},
+            {name: 'Db Major / Bb minor', accidental: 'b', num: 5, rootNote: 'Db'}
         ];
+
+        const solfegeSeries = ['do', 're', 'mi', 'fa', 'sol', 'la', 'ti'];
+        const noteSequence = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
         
-        function generateKeySignature() {
-            const randomIndex = Math.floor(Math.random() * keys.length);
-            const key = keys[randomIndex];
-            const staff = `X:1\nK:${key.name}\nL:1/4\n|:`;
+        let currentKeyIndex = 0;
+        let cycleInterval;
+        let currentExercise = 'key-signature';
+        
+        function getMovableDo(key, note) {
+            const rootIndex = noteSequence.indexOf(key.rootNote);
+            const noteIndex = noteSequence.indexOf(note);
+            const relativeSolfegeIndex = (noteIndex - rootIndex + 7) % 7;
+            return solfegeSeries[relativeSolfegeIndex];
+        }
+        
+        function generateExercise() {
+            const key = keys[currentKeyIndex];
+            let staff, note;
+
+            if (currentExercise === 'key-signature') {
+                staff = `X:1\nK:${key.name}\nL:1/4\n|:`;
+                note = '';
+            } else {
+                // Generate a random note
+                const randomNoteIndex = Math.floor(Math.random() * noteSequence.length);
+                const randomNote = noteSequence[randomNoteIndex];
+                const solfege = getMovableDo(key, randomNote);
+                
+                staff = `X:1\nK:${key.name}\nL:1/4\n[${randomNote}]`;
+                note = solfege;
+            }
             
+            // Clear previous rendering
+            document.getElementById("staff").innerHTML = '';
+            document.getElementById("answer").textContent = '';
+            
+            // Render staff
             ABCJS.renderAbc("staff", staff);
+            
+            // Set timeout to reveal answer
+            setTimeout(() => {
+                const answerText = currentExercise === 'key-signature' 
+                    ? `Key: ${key.name}` 
+                    : `Note: ${note} (${note === 'do' ? 'root' : 'relative to do'})`;
+                document.getElementById("answer").textContent = answerText;
+            }, 5000);
+            
+            // Move to next key, loop back to start if at end
+            currentKeyIndex = (currentKeyIndex + 1) % keys.length;
+        }
+        
+        function changeExercise() {
+            currentExercise = document.querySelector('input[name="exercise"]:checked').value;
+            generateExercise();
+        }
+        
+        // Start cycling through keys automatically when page loads
+        window.onload = function() {
+            generateExercise(); // Initial exercise
+            cycleInterval = setInterval(generateExercise, 6000); // 5s display + 1s buffer
         }
     </script>
 </head>
 <body>
-    <h1>Key Signature Trainer</h1>
-
-    <div id="staff"></div>
-    <button onclick="generateKeySignature()">New Key</button>
+    <div class="container">
+        <div class="exercise-selector">
+            <label>
+                <input type="radio" name="exercise" value="key-signature" checked onchange="changeExercise()">
+                Key Signature
+            </label>
+            <label>
+                <input type="radio" name="exercise" value="note" onchange="changeExercise()">
+                Note
+            </label>
+        </div>
+        <h1>Key Signature Trainer</h1>
+        <div id="staff"></div>
+        <div id="answer"></div>
+    </div>
 </body>
 </html>
