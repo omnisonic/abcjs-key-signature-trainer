@@ -117,7 +117,17 @@
         
         function changeExercise() {
             currentExercise = document.querySelector('input[name="exercise"]:checked').value;
+            syncCheckboxesWithSelection();
             generateExercise();
+        }
+        
+        function syncCheckboxesWithSelection() {
+            // Update all checkboxes to match selectedKeyIndices
+            keys.forEach((key, index) => {
+                const checkbox = document.getElementById(`key-${index}`);
+                checkbox.checked = selectedKeyIndices.includes(index);
+            });
+            updateAllKeysCheckbox();
         }
         
         function toggleKey(index) {
@@ -164,11 +174,14 @@
                 document.getElementById("staff").innerHTML = '<p>Please select at least one key to practice</p>';
                 document.getElementById("answer").textContent = '';
                 clearInterval(cycleInterval);
+                cycleInterval = null;
             } else {
                 // Make sure current key is selected
                 if (!selectedKeyIndices.includes(currentKeyIndex)) {
                     moveToNextSelectedKey();
                 }
+                // Generate new exercise
+                generateExercise();
                 // Restart interval if it was cleared
                 if (!cycleInterval) {
                     cycleInterval = setInterval(generateExercise, 6000);
