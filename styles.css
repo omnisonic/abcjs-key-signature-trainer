@@ -19,10 +19,38 @@ body, html {
 }
 
 header {
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
     margin-bottom: 30px;
     padding-bottom: 20px;
     border-bottom: 2px solid #eaeaea;
+}
+
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 24px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1001;
+    position: absolute;
+    left: 0;
+}
+
+.menu-toggle span {
+    width: 30px;
+    height: 3px;
+    background: #2c3e50;
+    border-radius: 10px;
+    transition: all 0.3s linear;
+    position: relative;
+    transform-origin: 1px;
 }
 
 h1 {
@@ -250,10 +278,12 @@ input[type="range"]::-moz-range-thumb:hover {
     width: 100%;
     pointer-events: none;
     padding: 40px 0;
+    overflow: visible;
+    text-align: center;
 }
 
 #staff svg {
-    margin: 0 auto;
+    margin: 0 auto !important;
     display: block;
     max-width: 100%;
     height: auto;
@@ -288,21 +318,38 @@ input[type="range"]::-moz-range-thumb:hover {
 
 /* Responsive adjustments */
 @media (max-width: 1024px) {
+    .menu-toggle {
+        display: flex;
+    }
+
     .main-layout {
-        flex-direction: column;
+        grid-template-columns: 1fr;
+        overflow: visible;
     }
     
+    .app-container {
+        overflow-y: auto;
+        height: auto;
+    }
+
     .sidebar {
-        width: 100%;
-        max-height: 400px;
+        position: fixed;
+        top: 0;
+        left: -300px;
+        width: 280px;
+        height: 100vh;
+        z-index: 1000;
+        transition: left 0.3s ease;
+        border-radius: 0 12px 12px 0;
+        box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar.active {
+        left: 0;
     }
     
     .content-area {
-        min-height: 500px;
-    }
-    
-    #staff svg {
-        transform: scale(1.8);
+        min-height: 400px;
     }
 }
 
@@ -311,23 +358,45 @@ input[type="range"]::-moz-range-thumb:hover {
         padding: 10px;
     }
     
+    header {
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+    }
+
     h1 {
-        font-size: 2.2rem;
-    }
-    
-    #staff svg {
-        transform: scale(1.5);
-    }
-    
-    #answer {
         font-size: 1.8rem;
     }
     
+    .staff-container {
+        min-height: 250px;
+        margin-bottom: 20px;
+    }
+
+    #staff {
+        padding: 20px 0;
+    }
+
+    #staff svg {
+        transform: scale(1.2);
+    }
+    
+    #answer {
+        font-size: 1.5rem;
+        min-width: 150px;
+    }
+    
     .sidebar {
-        padding: 20px;
+        padding: 15px;
+        gap: 10px;
     }
     
     .content-area {
-        padding: 20px;
+        padding: 15px;
+        min-height: 300px;
+    }
+
+    .sidebar-section h3 {
+        font-size: 1rem;
+        margin-bottom: 8px;
     }
 }

@@ -18,7 +18,7 @@ let answerTimeout;
 let currentExercise = 'key-signature';
 let selectedKeyIndices = [0, 1, 2, 3, 4, 5, 6, 7]; // All keys selected by default
 let staffDuration = 5; // seconds
-let answerDuration = 1; // seconds
+let answerDuration = 5; // seconds
 
 function getMovableDo(key, note) {
     const rootIndex = noteSequence.indexOf(key.rootNote);
@@ -51,7 +51,8 @@ function generateExercise() {
     // Render staff
     ABCJS.renderAbc("staff", staff, {
         scale: 2.0,
-        add_classes: true
+        add_classes: true,
+        staffwidth: 100
     });
     
     // Clear any existing answer timeout
@@ -215,6 +216,28 @@ window.onload = function() {
     // Initialize slider display values
     document.getElementById('staff-duration-value').textContent = `${staffDuration}s`;
     document.getElementById('answer-duration-value').textContent = `${answerDuration}s`;
+    
+    // Hamburger menu toggle
+    const menuToggle = document.getElementById('menu-toggle');
+    const sidebar = document.querySelector('.sidebar');
+    
+    if (menuToggle && sidebar) {
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            menuToggle.classList.toggle('active');
+        });
+        
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 1024 && 
+                !sidebar.contains(e.target) && 
+                !menuToggle.contains(e.target) && 
+                sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+                menuToggle.classList.remove('active');
+            }
+        });
+    }
     
     generateExercise(); // Initial exercise
     restartCycleInterval();
