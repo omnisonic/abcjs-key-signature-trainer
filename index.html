@@ -14,7 +14,7 @@
                 <span></span>
                 <span></span>
             </button>
-            <h1>Key Signature Trainer</h1>
+            <h1>Key Signature & Solfege Trainer</h1>
         </header>
         <div class="main-layout">
             <aside class="sidebar">
@@ -27,7 +27,13 @@
                         </label>
                         <label>
                             <input type="radio" name="exercise" value="note" onchange="changeExercise()">
-                            Note
+                            Solfege
+                        </label>
+                    </div>
+                    <div class="option-checkbox">
+                        <label>
+                            <input type="checkbox" id="include-ledger" onchange="toggleLedgerLines()">
+                            Include Ledger Lines
                         </label>
                     </div>
                 </div>

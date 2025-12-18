@@ -5,11 +5,11 @@ const keys = [
     {name: 'A Major / F# minor', abcKey: 'A', accidental: '#', num: 3, rootNote: 'A'},
     {name: 'E Major / C# minor', abcKey: 'E', accidental: '#', num: 4, rootNote: 'E'},
     {name: 'B Major / G# minor', abcKey: 'B', accidental: '#', num: 5, rootNote: 'B'},
-    {name: 'F# Major / D# minor', abcKey: 'F#', accidental: '#', num: 6, rootNote: 'F#'},
-    {name: 'Db Major / Bb minor', abcKey: 'Db', accidental: 'b', num: 5, rootNote: 'Db'}
+    {name: 'F# Major / D# minor', abcKey: 'F#', accidental: '#', num: 6, rootNote: 'F'},
+    {name: 'Db Major / Bb minor', abcKey: 'Db', accidental: 'b', num: 5, rootNote: 'D'}
 ];
 
-const solfegeSeries = ['do', 're', 'mi', 'fa', 'sol', 'la', 'ti'];
+const solfegeSeries = ['Do', 'Re', 'Mi', 'Fa', 'Sol', 'La', 'Ti'];
 const noteSequence = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
 
 let currentKeyIndex = 0;
@@ -19,6 +19,7 @@ let currentExercise = 'key-signature';
 let selectedKeyIndices = [0, 1, 2, 3, 4, 5, 6, 7]; // All keys selected by default
 let staffDuration = 5; // seconds
 let answerDuration = 5; // seconds
+let includeLedgerLines = false;
 
 function getMovableDo(key, note) {
     const rootIndex = noteSequence.indexOf(key.rootNote);
@@ -36,11 +37,28 @@ function generateExercise() {
         note = '';
     } else {
         // Generate a random note
-        const randomNoteIndex = Math.floor(Math.random() * noteSequence.length);
-        const randomNote = noteSequence[randomNoteIndex];
-        const solfege = getMovableDo(key, randomNote);
+        // Standard range: C4 to B4 (middle C to B above)
+        // Extended range: 3 ledger lines below (G3) to 3 ledger lines above (E6)
         
-        staff = `X:1\nK:${key.abcKey}\nL:1/4\n[${randomNote}]`;
+        let notes;
+        if (includeLedgerLines) {
+            notes = [
+                {abc: 'G,', name: 'G'}, {abc: 'A,', name: 'A'}, {abc: 'B,', name: 'B'},
+                {abc: 'C', name: 'C'}, {abc: 'D', name: 'D'}, {abc: 'E', name: 'E'}, {abc: 'F', name: 'F'}, {abc: 'G', name: 'G'}, {abc: 'A', name: 'A'}, {abc: 'B', name: 'B'},
+                {abc: 'c', name: 'C'}, {abc: 'd', name: 'D'}, {abc: 'e', name: 'E'}, {abc: 'f', name: 'F'}, {abc: 'g', name: 'G'}, {abc: 'a', name: 'A'}, {abc: 'b', name: 'B'},
+                {abc: "c'", name: 'C'}, {abc: "d'", name: 'D'}, {abc: "e'", name: 'E'}
+            ];
+        } else {
+            // Standard range C4 to B4
+            notes = [
+                {abc: 'C', name: 'C'}, {abc: 'D', name: 'D'}, {abc: 'E', name: 'E'}, {abc: 'F', name: 'F'}, {abc: 'G', name: 'G'}, {abc: 'A', name: 'A'}, {abc: 'B', name: 'B'}
+            ];
+        }
+
+        const randomNoteObj = notes[Math.floor(Math.random() * notes.length)];
+        const solfege = getMovableDo(key, randomNoteObj.name);
+        
+        staff = `X:1\nK:${key.abcKey}\nL:1/4\n[${randomNoteObj.abc}]`;
         note = solfege;
     }
     
@@ -50,7 +68,7 @@ function generateExercise() {
     
     // Render staff
     ABCJS.renderAbc("staff", staff, {
-        scale: 2.0,
+        scale: 3.0,
         add_classes: true,
         staffwidth: 100
     });
@@ -64,7 +82,7 @@ function generateExercise() {
     answerTimeout = setTimeout(() => {
         const answerText = currentExercise === 'key-signature' 
             ? `Key: ${key.name}` 
-            : `Note: ${note} (${note === 'do' ? 'root' : 'relative to do'})`;
+            : `${note}`;
         document.getElementById("answer").textContent = answerText;
     }, staffDuration * 1000);
     
@@ -76,6 +94,12 @@ function changeExercise() {
     currentExercise = document.querySelector('input[name="exercise"]:checked').value;
     syncCheckboxesWithSelection();
     generateExercise();
+}
+
+function toggleLedgerLines() {
+    includeLedgerLines = document.getElementById('include-ledger').checked;
+    generateExercise();
+    restartCycleInterval();
 }
 
 function syncCheckboxesWithSelection() {
