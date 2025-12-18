@@ -81,11 +81,13 @@ function generateExercise() {
 
         let notes;
         if (includeLedgerLines) {
+            // Range: D to B (4 ledger lines above and below)
             notes = [
-                {abc: 'G,', name: 'G'}, {abc: 'A,', name: 'A'}, {abc: 'B,', name: 'B'},
+                {abc: 'D,', name: 'D'}, {abc: 'E,', name: 'E'}, {abc: 'F,', name: 'F'}, {abc: 'G,', name: 'G'},
+                {abc: 'A,', name: 'A'}, {abc: 'B,', name: 'B'},
                 {abc: 'C', name: 'C'}, {abc: 'D', name: 'D'}, {abc: 'E', name: 'E'}, {abc: 'F', name: 'F'}, {abc: 'G', name: 'G'}, {abc: 'A', name: 'A'}, {abc: 'B', name: 'B'},
                 {abc: 'c', name: 'C'}, {abc: 'd', name: 'D'}, {abc: 'e', name: 'E'}, {abc: 'f', name: 'F'}, {abc: 'g', name: 'G'}, {abc: 'a', name: 'A'}, {abc: 'b', name: 'B'},
-                {abc: "c'", name: 'C'}, {abc: "d'", name: 'D'}, {abc: "e'", name: 'E'}
+                {abc: "c'", name: 'C'}, {abc: "d'", name: 'D'}, {abc: "e'", name: 'E'}, {abc: "f'", name: 'F'}, {abc: "g'", name: 'G'}, {abc: "a'", name: 'A'}, {abc: "b'", name: 'B'}
             ];
         } else {
             // Standard range C4 to B4
