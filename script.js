@@ -68,7 +68,7 @@ function generateExercise() {
     
     // Render staff
     ABCJS.renderAbc("staff", staff, {
-        scale: 3.0,
+        scale: 2.5,
         add_classes: true,
         staffwidth: 100
     });
