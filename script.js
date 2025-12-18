@@ -28,6 +28,44 @@ function getMovableDo(key, note) {
     return solfegeSeries[relativeSolfegeIndex];
 }
 
+// Apply key signature accidentals to a plain note letter when showing note names.
+function applyKeySignatureToNoteName(keyObj, noteName) {
+    // Map of common key signatures to altered scale degrees
+    const alterations = {
+        'C': {},
+        'G': {'F': '#'},
+        'D': {'F': '#', 'C': '#'},
+        'A': {'F': '#', 'C': '#', 'G': '#'},
+        'E': {'F': '#', 'C': '#', 'G': '#', 'D': '#'},
+        'B': {'F': '#', 'C': '#', 'G': '#', 'D': '#', 'A': '#'},
+        'F#': {'F': '#', 'C': '#', 'G': '#', 'D': '#', 'A': '#', 'E': '#'},
+        'Db': {'B': 'b', 'E': 'b', 'A': 'b', 'D': 'b', 'G': 'b'}
+    };
+
+    const map = alterations[keyObj.abcKey] || {};
+    const acc = map[noteName];
+    return acc ? `${noteName}${acc}` : noteName;
+}
+
+// Apply key signature accidentals to a plain note letter when showing note names.
+function applyKeySignatureToNoteName(keyObj, noteName) {
+    const keyName = keyObj.abcKey;
+    const alterations = {
+        'C': {},
+        'G': {'F': '#'},
+        'D': {'F': '#', 'C': '#'},
+        'A': {'F': '#', 'C': '#', 'G': '#'},
+        'E': {'F': '#', 'C': '#', 'G': '#', 'D': '#'},
+        'B': {'F': '#', 'C': '#', 'G': '#', 'D': '#', 'A': '#'},
+        'F#': {'F': '#', 'C': '#', 'G': '#', 'D': '#', 'A': '#', 'E': '#'},
+        'Db': {'B': 'b', 'E': 'b', 'A': 'b', 'D': 'b', 'G': 'b'}
+    };
+
+    const map = alterations[keyName] || {};
+    const accidental = map[noteName];
+    return accidental ? `${noteName}${accidental}` : noteName;
+}
+
 function generateExercise() {
     const key = keys[currentKeyIndex];
     let staff, note;
@@ -35,11 +73,11 @@ function generateExercise() {
     if (currentExercise === 'key-signature') {
         staff = `X:1\nK:${key.abcKey}\nL:1/4\n|:`;
         note = '';
-    } else {
+    } else if (currentExercise === 'note' || currentExercise === 'note-name') {
         // Generate a random note
         // Standard range: C4 to B4 (middle C to B above)
         // Extended range: 3 ledger lines below (G3) to 3 ledger lines above (E6)
-        
+
         let notes;
         if (includeLedgerLines) {
             notes = [
@@ -57,9 +95,12 @@ function generateExercise() {
 
         const randomNoteObj = notes[Math.floor(Math.random() * notes.length)];
         const solfege = getMovableDo(key, randomNoteObj.name);
-        
+
         staff = `X:1\nK:${key.abcKey}\nL:1/4\n[${randomNoteObj.abc}]`;
-        note = solfege;
+        // If exercise is "note-name" show the letter name with key signature applied, otherwise show solfege (movable Do)
+        note = currentExercise === 'note-name'
+            ? applyKeySignatureToNoteName(key, randomNoteObj.name)
+            : solfege;
     }
     
     // Clear previous rendering
