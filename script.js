@@ -308,6 +308,18 @@ window.onload = function() {
                 document.body.style.overflow = '';
             }
         });
+
+        // Sidebar close button (mobile): mirror backdrop behavior
+        const sidebarCloseBtn = document.querySelector('.sidebar-close');
+        if (sidebarCloseBtn) {
+            sidebarCloseBtn.addEventListener('click', () => {
+                sidebar.classList.remove('active');
+                menuToggle.classList.remove('active');
+                backdrop.classList.remove('active');
+                backdrop.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = '';
+            });
+        }
     }
 
     // About modal wiring

@@ -7,6 +7,11 @@ body, html {
     color: #333;
 }
 
+/* Use consistent box-sizing so paddings don't break mobile sizing */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
 .app-container {
     display: flex;
     flex-direction: column;
@@ -70,6 +75,14 @@ h1 {
     overflow: hidden;
 }
 
+/* Allow the main layout to shrink on small viewports so content fits vertically */
+@media (max-width: 1024px) {
+    .main-layout {
+        max-height: calc(100vh - 120px);
+        overflow: auto;
+    }
+}
+
 /* Sidebar Styles */
 .sidebar {
     background-color: white;
@@ -80,6 +93,15 @@ h1 {
     flex-direction: column;
     gap: 15px;
     overflow-y: auto;
+    position: relative;
+}
+
+/* Sidebar close button - hidden by default on large screens */
+.sidebar-close {
+    display: none;
+    background: transparent;
+    border: none;
+    cursor: pointer;
 }
 
 .sidebar-section h3 {
@@ -320,36 +342,48 @@ input[type="range"]::-moz-range-thumb:hover {
     overflow: visible;
 }
 
+/* Constrain rendered staff vertically on small screens so it doesn't push content off-screen */
+#staff svg {
+    max-height: 60vh;
+    height: auto;
+    width: auto;
+}
+
 .answer-container {
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 25px;
-    background-color: #f8f9fa;
-    border-radius: 12px;
-    border: 3px solid #e9ecef;
-    min-height: 100px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    padding: 12px 6px;
+    background-color: transparent;
+    border-radius: 0;
+    border: none;
+    min-height: 60px;
+    box-shadow: none;
 }
 
 #answer {
-    font-size: 2.2rem;
+    font-size: 1.8rem;
     font-weight: 700;
     color: #2c3e50;
     text-align: center;
-    padding: 10px 20px;
-    background-color: white;
-    border-radius: 8px;
-    border: 2px solid #4a90e2;
-    min-width: 200px;
-    box-shadow: 0 3px 8px rgba(74, 144, 226, 0.2);
+    padding: 6px 8px;
+    background-color: transparent;
+    border-radius: 0;
+    border: none;
+    min-width: 0;
+    box-shadow: none;
 }
 
 /* Responsive adjustments */
 @media (max-width: 1024px) {
     .menu-toggle {
         display: flex;
+    }
+
+    /* Make space for the hamburger so the centered title doesn't overlap it */
+    header {
+        padding-left: 60px;
     }
 
     .main-layout {
@@ -386,6 +420,36 @@ input[type="range"]::-moz-range-thumb:hover {
         transition: opacity 0.22s ease, transform 0.22s ease;
         opacity: 0;
         visibility: hidden;
+        overflow-y: auto;
+        padding-bottom: 20px;
+    }
+
+    /* Show a prominent close control inside sidebar on small screens */
+    .sidebar-close {
+        display: inline-flex;
+        position: absolute;
+        right: 12px;
+        top: 12px;
+        background: #2c3e50;
+        color: #fff;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        line-height: 1;
+        z-index: 1002;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+        border: none;
+        transition: transform 0.12s ease, background 0.12s ease;
+    }
+
+    .sidebar-close:hover,
+    .sidebar-close:focus {
+        background: #1f2b3a;
+        transform: translateY(-1px) scale(1.03);
+        outline: none;
     }
 
     .sidebar.active {
@@ -431,6 +495,8 @@ input[type="range"]::-moz-range-thumb:hover {
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.18s ease, transform 0.18s ease;
+    max-height: 90vh;
+    overflow: hidden;
 }
 
 .about-modal.active {
@@ -442,6 +508,12 @@ input[type="range"]::-moz-range-thumb:hover {
 .about-modal-content {
     padding: 22px 26px;
     color: #24303b;
+}
+
+/* Make modal content scroll if it exceeds the viewport height */
+.about-modal-content {
+    overflow-y: auto;
+    max-height: calc(90vh - 60px);
 }
 
 .about-modal h2 {
@@ -460,11 +532,37 @@ input[type="range"]::-moz-range-thumb:hover {
     position: absolute;
     right: 12px;
     top: 8px;
-    background: transparent;
+    background: #2c3e50;
     border: none;
-    font-size: 1.6rem;
-    color: #66707a;
+    color: #ffffff;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    line-height: 1;
     cursor: pointer;
+    box-shadow: 0 4px 12px rgba(44,62,80,0.18);
+    transition: transform 0.12s ease, background 0.12s ease, opacity 0.12s ease;
+}
+
+.modal-close:hover,
+.modal-close:focus {
+    background: #1f2b3a;
+    transform: translateY(-1px) scale(1.03);
+    outline: none;
+}
+
+/* Slightly move the close button inward on very small screens so it's comfortably tappable */
+@media (max-width: 420px) {
+    .modal-close {
+        right: 10px;
+        top: 10px;
+        width: 42px;
+        height: 42px;
+    }
 }
 
 .about-link a {
@@ -493,7 +591,8 @@ input[type="range"]::-moz-range-thumb:hover {
     }
     
     .staff-container {
-        min-height: 250px;
+        min-height: unset;
+        max-height: 55vh;
         margin-bottom: 20px;
     }
 
@@ -502,7 +601,8 @@ input[type="range"]::-moz-range-thumb:hover {
     }
 
     #staff svg {
-        transform: scale(1.2);
+        transform: none;
+        max-height: 50vh;
     }
     
     #answer {
@@ -517,7 +617,9 @@ input[type="range"]::-moz-range-thumb:hover {
     
     .content-area {
         padding: 15px;
-        min-height: 300px;
+        min-height: unset;
+        max-height: calc(100vh - 140px);
+        overflow: auto;
     }
 
     .sidebar-section h3 {
