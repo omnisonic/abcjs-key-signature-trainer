@@ -93,8 +93,14 @@
                         </div>
                     </div>
                 </div>
+                
+                <div class="sidebar-section">
+                    <h3>Info</h3>
+                    <div class="about-link">
+                        <a href="#" id="about-link">About this trainer</a>
+                    </div>
+                </div>
             </aside>
-            
             <main class="content-area">
                 <div class="staff-container">
                     <div id="staff"></div>
@@ -105,5 +111,16 @@
             </main>
         </div>
     </div>
+    <div id="modal-backdrop" class="modal-backdrop" aria-hidden="true"></div>
+        <div id="about-backdrop" class="modal-backdrop" aria-hidden="true"></div>
+        <div id="about-modal" class="about-modal" role="dialog" aria-modal="true" aria-hidden="true">
+            <div class="about-modal-content">
+                <button id="about-close" class="modal-close" aria-label="Close">×</button>
+                <h2>About this Trainer</h2>
+                <p>This trainer cycles either key signatures or individual notes on a staff so you can practice reading and identifying pitches.</p>
+                <p><strong>Solfege (Movable Do):</strong> shows the scale degree name for each note relative to the key — learning to identify the "Do" on the staff improves sight-singing, relative pitch, and quick interval recognition.</p>
+                <p><strong>Ledger lines:</strong> enable extended notes above and below the staff so you can practice reading notes across a wider range.</p>
+            </div>
+        </div>
 </body>
 </html>

@@ -255,28 +255,95 @@ function restartCycleInterval() {
 
 // Start cycling through keys automatically when page loads
 window.onload = function() {
+    // Sync UI with JavaScript defaults
+    syncCheckboxesWithSelection();
+    document.getElementById('include-ledger').checked = includeLedgerLines;
+    document.querySelector('input[name="exercise"]:checked').value = currentExercise;
+    document.querySelector(`input[name="exercise"][value="${currentExercise}"]`).checked = true;
+    document.getElementById('staff-duration').value = staffDuration;
+    document.getElementById('answer-duration').value = answerDuration;
+    
     // Initialize slider display values
     document.getElementById('staff-duration-value').textContent = `${staffDuration}s`;
     document.getElementById('answer-duration-value').textContent = `${answerDuration}s`;
     
-    // Hamburger menu toggle
+    // Hamburger menu toggle + modal backdrop handling
     const menuToggle = document.getElementById('menu-toggle');
     const sidebar = document.querySelector('.sidebar');
-    
-    if (menuToggle && sidebar) {
+    const backdrop = document.getElementById('modal-backdrop');
+
+    if (menuToggle && sidebar && backdrop) {
         menuToggle.addEventListener('click', () => {
+            const willOpen = !sidebar.classList.contains('active');
             sidebar.classList.toggle('active');
             menuToggle.classList.toggle('active');
+
+            if (willOpen) {
+                backdrop.classList.add('active');
+                backdrop.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+            } else {
+                backdrop.classList.remove('active');
+                backdrop.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = '';
+            }
         });
-        
-        // Close sidebar when clicking outside on mobile
-        document.addEventListener('click', (e) => {
-            if (window.innerWidth <= 1024 && 
-                !sidebar.contains(e.target) && 
-                !menuToggle.contains(e.target) && 
-                sidebar.classList.contains('active')) {
+
+        // Close when clicking the backdrop
+        backdrop.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            menuToggle.classList.remove('active');
+            backdrop.classList.remove('active');
+            backdrop.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+        });
+
+        // Close when pressing Escape (sidebar)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && sidebar.classList.contains('active')) {
                 sidebar.classList.remove('active');
                 menuToggle.classList.remove('active');
+                backdrop.classList.remove('active');
+                backdrop.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = '';
+            }
+        });
+    }
+
+    // About modal wiring
+    const aboutLink = document.getElementById('about-link');
+    const aboutModal = document.getElementById('about-modal');
+    const aboutBackdrop = document.getElementById('about-backdrop');
+    const aboutClose = document.getElementById('about-close');
+
+    function openAbout(e) {
+        if (e) e.preventDefault();
+        if (!aboutModal) return;
+        aboutModal.classList.add('active');
+        aboutBackdrop.classList.add('active');
+        aboutModal.setAttribute('aria-hidden', 'false');
+        aboutBackdrop.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeAbout() {
+        if (!aboutModal) return;
+        aboutModal.classList.remove('active');
+        aboutBackdrop.classList.remove('active');
+        aboutModal.setAttribute('aria-hidden', 'true');
+        aboutBackdrop.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    }
+
+    if (aboutLink && aboutModal && aboutBackdrop) {
+        aboutLink.addEventListener('click', openAbout);
+        aboutBackdrop.addEventListener('click', closeAbout);
+        if (aboutClose) aboutClose.addEventListener('click', closeAbout);
+
+        // Close about modal on Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && aboutModal.classList.contains('active')) {
+                closeAbout();
             }
         });
     }

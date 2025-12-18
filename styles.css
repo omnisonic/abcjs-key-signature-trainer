@@ -374,13 +374,108 @@ input[type="range"]::-moz-range-thumb:hover {
         box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
     }
 
+    /* Modal-style sidebar for small screens */
+    .sidebar {
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%) scale(0.95);
+        width: min(92%, 360px);
+        height: auto;
+        max-height: 90vh;
+        border-radius: 12px;
+        transition: opacity 0.22s ease, transform 0.22s ease;
+        opacity: 0;
+        visibility: hidden;
+    }
+
     .sidebar.active {
-        left: 0;
+        opacity: 1;
+        visibility: visible;
+        transform: translate(-50%, -50%) scale(1);
+        z-index: 1001;
+    }
+
+    /* Backdrop */
+    .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.45);
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.22s ease;
+    }
+
+    .modal-backdrop.active {
+        opacity: 1;
+        visibility: visible;
     }
     
     .content-area {
         min-height: 400px;
     }
+}
+
+/* About modal (global) */
+.about-modal {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(0.98);
+    width: min(720px, 92%);
+    max-width: 720px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.18);
+    z-index: 1002;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.about-modal.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.about-modal-content {
+    padding: 22px 26px;
+    color: #24303b;
+}
+
+.about-modal h2 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 1.4rem;
+    color: #2c3e50;
+}
+
+.about-modal p {
+    margin: 8px 0;
+    line-height: 1.4;
+}
+
+.modal-close {
+    position: absolute;
+    right: 12px;
+    top: 8px;
+    background: transparent;
+    border: none;
+    font-size: 1.6rem;
+    color: #66707a;
+    cursor: pointer;
+}
+
+.about-link a {
+    display: inline-block;
+    color: #2c6cdf;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.about-link a:hover {
+    text-decoration: underline;
 }
 
 @media (max-width: 768px) {
