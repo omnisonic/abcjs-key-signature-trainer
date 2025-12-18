@@ -302,7 +302,8 @@ input[type="range"]::-moz-range-thumb:hover {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    gap: 30px;
     background-color: white;
     border-radius: 12px;
     padding: 20px;
@@ -316,7 +317,6 @@ input[type="range"]::-moz-range-thumb:hover {
 }
 
 .staff-container {
-    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -325,6 +325,7 @@ input[type="range"]::-moz-range-thumb:hover {
     margin-bottom: 20px;
     position: relative;
     overflow: visible;
+    flex-shrink: 0;
 }
 
 #staff {

@@ -20,6 +20,7 @@ let selectedKeyIndices = [0, 1, 2, 3, 4, 5, 6, 7]; // All keys selected by defau
 let staffDuration = 5; // seconds
 let answerDuration = 5; // seconds
 let includeLedgerLines = true;
+let currentAnswer = ''; // Store the current answer for early reveal
 
 function getMovableDo(key, note) {
     const rootIndex = noteSequence.indexOf(key.rootNote);
@@ -107,6 +108,11 @@ function generateExercise() {
     document.getElementById("staff").innerHTML = '';
     document.getElementById("answer").textContent = '';
     
+    // Store the answer that will be revealed
+    currentAnswer = currentExercise === 'key-signature' 
+        ? `Key: ${key.name}` 
+        : `${note}`;
+    
     // Render staff
     ABCJS.renderAbc("staff", staff, {
         scale: 2.5,
@@ -121,10 +127,8 @@ function generateExercise() {
     
     // Set timeout to reveal answer
     answerTimeout = setTimeout(() => {
-        const answerText = currentExercise === 'key-signature' 
-            ? `Key: ${key.name}` 
-            : `${note}`;
-        document.getElementById("answer").textContent = answerText;
+        const answerElement = document.getElementById("answer");
+        answerElement.textContent = currentAnswer;
     }, staffDuration * 1000);
     
     // Move to next selected key
@@ -294,6 +298,27 @@ function restartCycleInterval() {
     }
 }
 
+function skipToNextCard() {
+    const answerElement = document.getElementById('answer');
+    const answerText = answerElement.textContent.trim();
+    
+    // If answer is not shown yet, reveal it
+    if (!answerText) {
+        if (answerTimeout) {
+            clearTimeout(answerTimeout);
+        }
+        // Show the answer immediately
+        answerElement.textContent = currentAnswer;
+    } else {
+        // Answer is already shown, advance to next card
+        if (answerTimeout) {
+            clearTimeout(answerTimeout);
+        }
+        generateExercise();
+        restartCycleInterval();
+    }
+}
+
 // Start cycling through keys automatically when page loads
 window.onload = function() {
     // Sync UI with JavaScript defaults
@@ -307,6 +332,25 @@ window.onload = function() {
     // Initialize slider display values
     document.getElementById('staff-duration-value').textContent = `${staffDuration}s`;
     document.getElementById('answer-duration-value').textContent = `${answerDuration}s`;
+    
+    // Space bar and tap to skip to next card
+    document.addEventListener('keydown', (e) => {
+        if (e.code === 'Space' && !document.querySelector('.sidebar.active') && !document.querySelector('.about-modal.active')) {
+            e.preventDefault();
+            skipToNextCard();
+        }
+    });
+    
+    // Tap to skip (on content area)
+    const contentArea = document.querySelector('.content-area');
+    if (contentArea) {
+        contentArea.addEventListener('click', (e) => {
+            // Only skip if clicking directly on content area, not on form elements
+            if (e.target === contentArea || e.target.id === 'staff' || e.target.id === 'answer') {
+                skipToNextCard();
+            }
+        });
+    }
     
     // Hamburger menu toggle + modal backdrop handling
     const menuToggle = document.getElementById('menu-toggle');
