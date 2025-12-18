@@ -15,11 +15,11 @@ const noteSequence = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
 let currentKeyIndex = 0;
 let cycleInterval;
 let answerTimeout;
-let currentExercise = 'key-signature';
+let currentExercise = 'note';
 let selectedKeyIndices = [0, 1, 2, 3, 4, 5, 6, 7]; // All keys selected by default
 let staffDuration = 5; // seconds
 let answerDuration = 5; // seconds
-let includeLedgerLines = false;
+let includeLedgerLines = true;
 
 function getMovableDo(key, note) {
     const rootIndex = noteSequence.indexOf(key.rootNote);
