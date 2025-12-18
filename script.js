@@ -113,6 +113,8 @@ function syncCheckboxesWithSelection() {
 
 function toggleKey(index) {
     const checkbox = document.getElementById(`key-${index}`);
+    const wasEmpty = selectedKeyIndices.length === 0;
+    
     if (checkbox.checked) {
         // Add key if not already selected
         if (!selectedKeyIndices.includes(index)) {
@@ -130,6 +132,22 @@ function toggleKey(index) {
     // If current key is no longer selected, move to next selected key
     if (!selectedKeyIndices.includes(currentKeyIndex)) {
         moveToNextSelectedKey();
+    }
+    
+    // If we're adding keys after having none selected, restart the exercise
+    if (wasEmpty && selectedKeyIndices.length > 0) {
+        generateExercise();
+        restartCycleInterval();
+    } else if (selectedKeyIndices.length > 0) {
+        // Regenerate exercise when keys change
+        generateExercise();
+        restartCycleInterval();
+    } else if (selectedKeyIndices.length === 0) {
+        // Stop when no keys are selected
+        document.getElementById("staff").innerHTML = '<p>Please select at least one key to practice</p>';
+        document.getElementById("answer").textContent = '';
+        clearInterval(cycleInterval);
+        cycleInterval = null;
     }
 }
 
