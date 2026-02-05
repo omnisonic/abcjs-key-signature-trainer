@@ -30,7 +30,8 @@ export const keySignatureAlterations = {
     'Db': {'B': 'b', 'E': 'b', 'A': 'b', 'D': 'b', 'G': 'b'}
 };
 
-// Note ranges for exercises - full range from D, to b'
+// Note ranges for exercises - full range from D, to b' (ABC notation)
+// Names are just the note letter without octave numbers for answer display
 export const allNotes = [
     {abc: 'D,', name: 'D'}, {abc: 'E,', name: 'E'}, {abc: 'F,', name: 'F'}, {abc: 'G,', name: 'G'},
     {abc: 'A,', name: 'A'}, {abc: 'B,', name: 'B'},
@@ -39,10 +40,11 @@ export const allNotes = [
     {abc: "c'", name: 'C'}, {abc: "d'", name: 'D'}, {abc: "e'", name: 'E'}, {abc: "f'", name: 'F'}, {abc: "g'", name: 'G'}, {abc: "a'", name: 'A'}, {abc: "b'", name: 'B'}
 ];
 
-// Display names for the note limits (for the slider labels)
+// Display names for the note limits (for the slider labels) - using standard octave numbers
+// D3 to B6 range (scientific pitch notation)
 export const noteDisplayNames = [
-    'D,', 'E,', 'F,', 'G,', 'A,', 'B,', 'C', 'D', 'E', 'F', 'G', 'A', 'B',
-    'c', 'd', 'e', 'f', 'g', 'a', 'b', "c'", "d'", "e'", "f'", "g'", "a'", "b'"
+    'D3', 'E3', 'F3', 'G3', 'A3', 'B3', 'C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4',
+    'C5', 'D5', 'E5', 'F5', 'G5', 'A5', 'B5', 'C6', 'D6', 'E6', 'F6', 'G6', 'A6', 'B6'
 ];
 
 // Default configuration
@@ -52,6 +54,6 @@ export const DEFAULTS = {
     selectedKeyIndices: [0],
     staffDuration: 5,
     answerDuration: 5,
-    lowerLimit: 0,      // Index in allNotes array (D,)
-    upperLimit: 27      // Index in allNotes array (b')
+    lowerLimit: 0,      // Index in allNotes array (D3)
+    upperLimit: 26      // Index in allNotes array (B6)
 };
