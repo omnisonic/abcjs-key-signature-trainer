@@ -24,16 +24,21 @@ export function applyKeySignatureToNoteName(keyObj, noteName) {
 /**
  * Generate the ABC notation staff for an exercise
  */
-export function generateStaff(key, exerciseType, lowerLimit, upperLimit) {
+export function generateStaff(key, exerciseType, lowerLimit, upperLimit, noteObj = null) {
     if (exerciseType === 'key-signature') {
         return `X:1\nK:${key.abcKey}\nL:1/4\n|:`;
     }
     
-    // Generate a random note for note exercises within the specified range
-    const notes = getNotesInRange(lowerLimit, upperLimit);
-    const randomNoteObj = notes[Math.floor(Math.random() * notes.length)];
+    // Use provided note or generate a random one
+    let selectedNote;
+    if (noteObj) {
+        selectedNote = noteObj;
+    } else {
+        const notes = getNotesInRange(lowerLimit, upperLimit);
+        selectedNote = notes[Math.floor(Math.random() * notes.length)];
+    }
     
-    return `X:1\nK:${key.abcKey}\nL:1/4\n[${randomNoteObj.abc}]`;
+    return `X:1\nK:${key.abcKey}\nL:1/4\n[${selectedNote.abc}]`;
 }
 
 /**

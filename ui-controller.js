@@ -41,17 +41,18 @@ export function generateExercise() {
     const lowerLimit = getLowerLimit();
     const upperLimit = getUpperLimit();
     
-    let staff, noteName;
+    let staff, noteName, randomNoteObj;
     
     if (exerciseType === 'key-signature') {
         staff = generateStaff(key, exerciseType, lowerLimit, upperLimit);
         noteName = '';
     } else {
         // Generate a random note
-        const randomNoteObj = getRandomNote(lowerLimit, upperLimit);
+        randomNoteObj = getRandomNote(lowerLimit, upperLimit);
         noteName = getNoteNameFromRandomNote(randomNoteObj);
         
-        staff = generateStaff(key, exerciseType, lowerLimit, upperLimit);
+        // Pass the same note to generateStaff to ensure consistency
+        staff = generateStaff(key, exerciseType, lowerLimit, upperLimit, randomNoteObj);
     }
     
     // Clear previous rendering
@@ -611,8 +612,14 @@ export function initializeEventListeners() {
 export function initializeUI() {
     // Sync UI with JavaScript defaults
     syncCheckboxesWithSelection();
-    document.querySelector('input[name="exercise"]:checked').value = getCurrentExercise();
-    document.querySelector(`input[name="exercise"][value="${getCurrentExercise()}"]`).checked = true;
+    
+    // Set exercise type radio button
+    const exerciseRadio = document.querySelector(`input[name="exercise"][value="${getCurrentExercise()}"]`);
+    if (exerciseRadio) {
+        exerciseRadio.checked = true;
+    }
+    
+    // Set duration sliders
     document.getElementById('staff-duration').value = getStaffDuration();
     document.getElementById('answer-duration').value = getAnswerDuration();
     

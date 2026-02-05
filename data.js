@@ -48,8 +48,8 @@ export const noteDisplayNames = [
 // Default configuration
 export const DEFAULTS = {
     currentKeyIndex: 0,
-    currentExercise: 'note',
-    selectedKeyIndices: [0, 1, 2, 3, 4, 5, 6, 7],
+    currentExercise: 'note-name',
+    selectedKeyIndices: [0],
     staffDuration: 5,
     answerDuration: 5,
     lowerLimit: 0,      // Index in allNotes array (D,)
