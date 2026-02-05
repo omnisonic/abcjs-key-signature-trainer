@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://cdn.jsdelivr.net/npm/abcjs@6.0.0/dist/abcjs-basic-min.js"></script>
     <link rel="stylesheet" href="styles.css">
-    <script src="script.js" defer></script>
+    <script type="module" src="main.js" defer></script>
 </head>
 <body>
     <div class="app-container">
@@ -31,21 +31,21 @@
                     <h3>Exercise Type</h3>
                     <div class="exercise-selector">
                         <label>
-                            <input type="radio" name="exercise" value="key-signature" onchange="changeExercise()">
+                            <input type="radio" name="exercise" value="key-signature" id="exercise-key-signature">
                             Key Signature
                         </label>
                         <label>
-                            <input type="radio" name="exercise" value="note" checked onchange="changeExercise()">
+                            <input type="radio" name="exercise" value="note" id="exercise-note" checked>
                             Solfege
                         </label>
                         <label>
-                            <input type="radio" name="exercise" value="note-name" onchange="changeExercise()">
+                            <input type="radio" name="exercise" value="note-name" id="exercise-note-name">
                             Note Name
                         </label>
                     </div>
                     <div class="option-checkbox">
                         <label>
-                            <input type="checkbox" id="include-ledger" checked onchange="toggleLedgerLines()">
+                            <input type="checkbox" id="include-ledger" checked>
                             Include Ledger Lines
                         </label>
                     </div>
@@ -55,39 +55,39 @@
                     <h3>Key Selection</h3>
                     <div class="key-selector">
                         <div class="key-checkbox">
-                            <input type="checkbox" id="key-all" checked onchange="toggleAllKeys()">
+                            <input type="checkbox" id="key-all" checked>
                             <label for="key-all">All Keys</label>
                         </div>
                         <div class="key-checkbox">
-                            <input type="checkbox" id="key-0" checked onchange="toggleKey(0)">
+                            <input type="checkbox" id="key-0" checked>
                             <label for="key-0">C Major / A minor</label>
                         </div>
                         <div class="key-checkbox">
-                            <input type="checkbox" id="key-1" checked onchange="toggleKey(1)">
+                            <input type="checkbox" id="key-1" checked>
                             <label for="key-1">G Major / E minor</label>
                         </div>
                         <div class="key-checkbox">
-                            <input type="checkbox" id="key-2" checked onchange="toggleKey(2)">
+                            <input type="checkbox" id="key-2" checked>
                             <label for="key-2">D Major / B minor</label>
                         </div>
                         <div class="key-checkbox">
-                            <input type="checkbox" id="key-3" checked onchange="toggleKey(3)">
+                            <input type="checkbox" id="key-3" checked>
                             <label for="key-3">A Major / F# minor</label>
                         </div>
                         <div class="key-checkbox">
-                            <input type="checkbox" id="key-4" checked onchange="toggleKey(4)">
+                            <input type="checkbox" id="key-4" checked>
                             <label for="key-4">E Major / C# minor</label>
                         </div>
                         <div class="key-checkbox">
-                            <input type="checkbox" id="key-5" checked onchange="toggleKey(5)">
+                            <input type="checkbox" id="key-5" checked>
                             <label for="key-5">B Major / G# minor</label>
                         </div>
                         <div class="key-checkbox">
-                            <input type="checkbox" id="key-6" checked onchange="toggleKey(6)">
+                            <input type="checkbox" id="key-6" checked>
                             <label for="key-6">F# Major / D# minor</label>
                         </div>
                         <div class="key-checkbox">
-                            <input type="checkbox" id="key-7" checked onchange="toggleKey(7)">
+                            <input type="checkbox" id="key-7" checked>
                             <label for="key-7">Db Major / Bb minor</label>
                         </div>
                     </div>
@@ -98,11 +98,11 @@
                     <div class="duration-controls">
                         <div class="slider-container">
                             <label for="staff-duration">Staff Duration: <span id="staff-duration-value" class="slider-value">5s</span></label>
-                            <input type="range" id="staff-duration" min="1" max="5" step="0.5" value="5" oninput="updateStaffDuration()">
+                            <input type="range" id="staff-duration" min="1" max="5" step="0.5" value="5">
                         </div>
                         <div class="slider-container">
                             <label for="answer-duration">Answer Duration: <span id="answer-duration-value" class="slider-value">5s</span></label>
-                            <input type="range" id="answer-duration" min="1" max="5" step="0.5" value="5" oninput="updateAnswerDuration()">
+                            <input type="range" id="answer-duration" min="1" max="5" step="0.5" value="5">
                         </div>
                     </div>
                 </div>
