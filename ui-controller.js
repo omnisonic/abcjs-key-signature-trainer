@@ -1,14 +1,15 @@
 // UI Controller for Key Signature Trainer
 
-import { keys } from './data.js';
-import { generateStaff, generateAnswer, getRandomNote, getNoteNameFromRandomNote } from './music-logic.js';
+import { keys, noteDisplayNames } from './data.js';
+import { generateStaff, generateAnswer, getRandomNote, getNoteNameFromRandomNote, getNoteByIndex } from './music-logic.js';
 import {
     getCurrentKeyIndex,
     getCurrentExercise,
     getSelectedKeyIndices,
     getStaffDuration,
     getAnswerDuration,
-    getIncludeLedgerLines,
+    getLowerLimit,
+    getUpperLimit,
     getCurrentAnswer,
     getCycleInterval,
     getAnswerTimeout,
@@ -17,7 +18,8 @@ import {
     setSelectedKeyIndices,
     setStaffDuration,
     setAnswerDuration,
-    setIncludeLedgerLines,
+    setLowerLimit,
+    setUpperLimit,
     setCurrentAnswer,
     setCycleInterval,
     setAnswerTimeout,
@@ -36,19 +38,20 @@ import {
 export function generateExercise() {
     const key = keys[getCurrentKeyIndex()];
     const exerciseType = getCurrentExercise();
-    const includeLedgerLines = getIncludeLedgerLines();
+    const lowerLimit = getLowerLimit();
+    const upperLimit = getUpperLimit();
     
     let staff, noteName;
     
     if (exerciseType === 'key-signature') {
-        staff = generateStaff(key, exerciseType, includeLedgerLines);
+        staff = generateStaff(key, exerciseType, lowerLimit, upperLimit);
         noteName = '';
     } else {
         // Generate a random note
-        const randomNoteObj = getRandomNote(includeLedgerLines);
+        const randomNoteObj = getRandomNote(lowerLimit, upperLimit);
         noteName = getNoteNameFromRandomNote(randomNoteObj);
         
-        staff = generateStaff(key, exerciseType, includeLedgerLines);
+        staff = generateStaff(key, exerciseType, lowerLimit, upperLimit);
     }
     
     // Clear previous rendering
@@ -97,15 +100,6 @@ export function changeExercise() {
     generateExercise();
 }
 
-/**
- * Toggle ledger lines
- */
-export function toggleLedgerLines() {
-    const includeLedgerLines = document.getElementById('include-ledger').checked;
-    setIncludeLedgerLines(includeLedgerLines);
-    generateExercise();
-    restartCycleInterval();
-}
 
 /**
  * Sync checkboxes with selected key indices
@@ -239,6 +233,150 @@ export function updateAnswerDuration() {
     
     // Update cycle interval with new timing
     restartCycleInterval();
+}
+
+
+/**
+ * Update the display text for note limit sliders
+ */
+export function updateNoteLimitDisplays() {
+    const lowerLimit = getLowerLimit();
+    const upperLimit = getUpperLimit();
+    
+    document.getElementById('lower-limit-value').textContent = noteDisplayNames[lowerLimit];
+    document.getElementById('upper-limit-value').textContent = noteDisplayNames[upperLimit];
+}
+
+/**
+ * Preview the note at the lower limit slider position
+ */
+export function previewLowerLimit() {
+    // Stop any cycling when user starts adjusting sliders
+    clearAllIntervals();
+    
+    const slider = document.getElementById('lower-limit');
+    const limit = parseInt(slider.value);
+    const upperLimit = getUpperLimit();
+    
+    // Ensure lower limit doesn't exceed upper limit
+    if (limit > upperLimit) {
+        slider.value = upperLimit;
+        return;
+    }
+    
+    // Update the display
+    document.getElementById('lower-limit-value').textContent = noteDisplayNames[limit];
+    
+    // Show the specific note at this position (only if we're not in key-signature mode)
+    const exerciseType = getCurrentExercise();
+    if (exerciseType !== 'key-signature') {
+        const key = keys[getCurrentKeyIndex()];
+        const noteObj = getNoteByIndex(limit, upperLimit, 0); // Get first note in range
+        
+        // Clear and render the specific note
+        document.getElementById("staff").innerHTML = '';
+        document.getElementById("answer").textContent = '';
+        
+        const staff = `X:1\nK:${key.abcKey}\nL:1/4\n[${noteObj.abc}]`;
+        ABCJS.renderAbc("staff", staff, {
+            scale: 2.5,
+            add_classes: true,
+            staffwidth: 100
+        });
+    }
+}
+
+/**
+ * Preview the note at the upper limit slider position
+ */
+export function previewUpperLimit() {
+    // Stop any cycling when user starts adjusting sliders
+    clearAllIntervals();
+    
+    const slider = document.getElementById('upper-limit');
+    const limit = parseInt(slider.value);
+    const lowerLimit = getLowerLimit();
+    
+    // Ensure upper limit doesn't go below lower limit
+    if (limit < lowerLimit) {
+        slider.value = lowerLimit;
+        return;
+    }
+    
+    // Update the display
+    document.getElementById('upper-limit-value').textContent = noteDisplayNames[limit];
+    
+    // Show the specific note at this position (only if we're not in key-signature mode)
+    const exerciseType = getCurrentExercise();
+    if (exerciseType !== 'key-signature') {
+        const key = keys[getCurrentKeyIndex()];
+        const noteObj = getNoteByIndex(lowerLimit, limit, limit - lowerLimit); // Get last note in range
+        
+        // Clear and render the specific note
+        document.getElementById("staff").innerHTML = '';
+        document.getElementById("answer").textContent = '';
+        
+        const staff = `X:1\nK:${key.abcKey}\nL:1/4\n[${noteObj.abc}]`;
+        ABCJS.renderAbc("staff", staff, {
+            scale: 2.5,
+            add_classes: true,
+            staffwidth: 100
+        });
+    }
+}
+
+/**
+ * Finalize lower limit update (when user stops dragging)
+ */
+export function finalizeLowerLimit() {
+    const slider = document.getElementById('lower-limit');
+    const limit = parseInt(slider.value);
+    const upperLimit = getUpperLimit();
+    
+    // Ensure lower limit doesn't exceed upper limit
+    if (limit > upperLimit) {
+        setLowerLimit(upperLimit);
+        slider.value = upperLimit;
+    } else {
+        setLowerLimit(limit);
+    }
+    
+    // Update display
+    updateNoteLimitDisplays();
+    
+    // Resume normal exercise cycling
+    const selectedIndices = getSelectedKeyIndices();
+    if (selectedIndices.length > 0) {
+        generateExercise();
+        restartCycleInterval();
+    }
+}
+
+/**
+ * Finalize upper limit update (when user stops dragging)
+ */
+export function finalizeUpperLimit() {
+    const slider = document.getElementById('upper-limit');
+    const limit = parseInt(slider.value);
+    const lowerLimit = getLowerLimit();
+    
+    // Ensure upper limit doesn't go below lower limit
+    if (limit < lowerLimit) {
+        setUpperLimit(lowerLimit);
+        slider.value = lowerLimit;
+    } else {
+        setUpperLimit(limit);
+    }
+    
+    // Update display
+    updateNoteLimitDisplays();
+    
+    // Resume normal exercise cycling
+    const selectedIndices = getSelectedKeyIndices();
+    if (selectedIndices.length > 0) {
+        generateExercise();
+        restartCycleInterval();
+    }
 }
 
 /**
@@ -429,12 +567,6 @@ export function initializeEventListeners() {
         radio.addEventListener('change', changeExercise);
     });
     
-    // Include ledger lines checkbox
-    const ledgerCheckbox = document.getElementById('include-ledger');
-    if (ledgerCheckbox) {
-        ledgerCheckbox.addEventListener('change', toggleLedgerLines);
-    }
-    
     // Key selection checkboxes
     const keyAllCheckbox = document.getElementById('key-all');
     if (keyAllCheckbox) {
@@ -458,6 +590,19 @@ export function initializeEventListeners() {
     if (answerDurationSlider) {
         answerDurationSlider.addEventListener('input', updateAnswerDuration);
     }
+    
+    // Note range sliders - use input for preview, change for finalize
+    const lowerLimitSlider = document.getElementById('lower-limit');
+    if (lowerLimitSlider) {
+        lowerLimitSlider.addEventListener('input', previewLowerLimit);
+        lowerLimitSlider.addEventListener('change', finalizeLowerLimit);
+    }
+    
+    const upperLimitSlider = document.getElementById('upper-limit');
+    if (upperLimitSlider) {
+        upperLimitSlider.addEventListener('input', previewUpperLimit);
+        upperLimitSlider.addEventListener('change', finalizeUpperLimit);
+    }
 }
 
 /**
@@ -466,13 +611,19 @@ export function initializeEventListeners() {
 export function initializeUI() {
     // Sync UI with JavaScript defaults
     syncCheckboxesWithSelection();
-    document.getElementById('include-ledger').checked = getIncludeLedgerLines();
     document.querySelector('input[name="exercise"]:checked').value = getCurrentExercise();
     document.querySelector(`input[name="exercise"][value="${getCurrentExercise()}"]`).checked = true;
     document.getElementById('staff-duration').value = getStaffDuration();
     document.getElementById('answer-duration').value = getAnswerDuration();
     
+    // Initialize note limit sliders
+    document.getElementById('lower-limit').value = getLowerLimit();
+    document.getElementById('upper-limit').value = getUpperLimit();
+    
     // Initialize slider display values
     document.getElementById('staff-duration-value').textContent = `${getStaffDuration()}s`;
     document.getElementById('answer-duration-value').textContent = `${getAnswerDuration()}s`;
+    
+    // Initialize note limit displays
+    updateNoteLimitDisplays();
 }

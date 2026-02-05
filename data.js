@@ -30,8 +30,8 @@ export const keySignatureAlterations = {
     'Db': {'B': 'b', 'E': 'b', 'A': 'b', 'D': 'b', 'G': 'b'}
 };
 
-// Note ranges for exercises
-export const extendedRangeNotes = [
+// Note ranges for exercises - full range from D, to b'
+export const allNotes = [
     {abc: 'D,', name: 'D'}, {abc: 'E,', name: 'E'}, {abc: 'F,', name: 'F'}, {abc: 'G,', name: 'G'},
     {abc: 'A,', name: 'A'}, {abc: 'B,', name: 'B'},
     {abc: 'C', name: 'C'}, {abc: 'D', name: 'D'}, {abc: 'E', name: 'E'}, {abc: 'F', name: 'F'}, {abc: 'G', name: 'G'}, {abc: 'A', name: 'A'}, {abc: 'B', name: 'B'},
@@ -39,8 +39,10 @@ export const extendedRangeNotes = [
     {abc: "c'", name: 'C'}, {abc: "d'", name: 'D'}, {abc: "e'", name: 'E'}, {abc: "f'", name: 'F'}, {abc: "g'", name: 'G'}, {abc: "a'", name: 'A'}, {abc: "b'", name: 'B'}
 ];
 
-export const standardRangeNotes = [
-    {abc: 'C', name: 'C'}, {abc: 'D', name: 'D'}, {abc: 'E', name: 'E'}, {abc: 'F', name: 'F'}, {abc: 'G', name: 'G'}, {abc: 'A', name: 'A'}, {abc: 'B', name: 'B'}
+// Display names for the note limits (for the slider labels)
+export const noteDisplayNames = [
+    'D,', 'E,', 'F,', 'G,', 'A,', 'B,', 'C', 'D', 'E', 'F', 'G', 'A', 'B',
+    'c', 'd', 'e', 'f', 'g', 'a', 'b', "c'", "d'", "e'", "f'", "g'", "a'", "b'"
 ];
 
 // Default configuration
@@ -50,5 +52,6 @@ export const DEFAULTS = {
     selectedKeyIndices: [0, 1, 2, 3, 4, 5, 6, 7],
     staffDuration: 5,
     answerDuration: 5,
-    includeLedgerLines: true
+    lowerLimit: 0,      // Index in allNotes array (D,)
+    upperLimit: 27      // Index in allNotes array (b')
 };

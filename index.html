@@ -43,11 +43,19 @@
                             Note Name
                         </label>
                     </div>
-                    <div class="option-checkbox">
-                        <label>
-                            <input type="checkbox" id="include-ledger" checked>
-                            Include Ledger Lines
-                        </label>
+                </div>
+                
+                <div class="sidebar-section">
+                    <h3>Note Range</h3>
+                    <div class="duration-controls">
+                        <div class="slider-container">
+                            <label for="lower-limit">Lower Limit: <span id="lower-limit-value" class="slider-value">D,</span></label>
+                            <input type="range" id="lower-limit" min="0" max="7" step="1" value="0">
+                        </div>
+                        <div class="slider-container">
+                            <label for="upper-limit">Upper Limit: <span id="upper-limit-value" class="slider-value">b'</span></label>
+                            <input type="range" id="upper-limit" min="7" max="27" step="1" value="27">
+                        </div>
                     </div>
                 </div>
                 

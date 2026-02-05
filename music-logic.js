@@ -1,6 +1,6 @@
 // Music Theory Logic for Key Signature Trainer
 
-import { keys, solfegeSeries, noteSequence, keySignatureAlterations, extendedRangeNotes, standardRangeNotes } from './data.js';
+import { keys, solfegeSeries, noteSequence, keySignatureAlterations, allNotes } from './data.js';
 
 /**
  * Convert a note to its solfege equivalent (Movable Do)
@@ -24,13 +24,13 @@ export function applyKeySignatureToNoteName(keyObj, noteName) {
 /**
  * Generate the ABC notation staff for an exercise
  */
-export function generateStaff(key, exerciseType, includeLedgerLines) {
+export function generateStaff(key, exerciseType, lowerLimit, upperLimit) {
     if (exerciseType === 'key-signature') {
         return `X:1\nK:${key.abcKey}\nL:1/4\n|:`;
     }
     
-    // Generate a random note for note exercises
-    const notes = includeLedgerLines ? extendedRangeNotes : standardRangeNotes;
+    // Generate a random note for note exercises within the specified range
+    const notes = getNotesInRange(lowerLimit, upperLimit);
     const randomNoteObj = notes[Math.floor(Math.random() * notes.length)];
     
     return `X:1\nK:${key.abcKey}\nL:1/4\n[${randomNoteObj.abc}]`;
@@ -55,9 +55,26 @@ export function generateAnswer(key, exerciseType, noteName) {
 /**
  * Get a random note object for the exercise
  */
-export function getRandomNote(includeLedgerLines) {
-    const notes = includeLedgerLines ? extendedRangeNotes : standardRangeNotes;
+export function getRandomNote(lowerLimit, upperLimit) {
+    const notes = getNotesInRange(lowerLimit, upperLimit);
     return notes[Math.floor(Math.random() * notes.length)];
+}
+
+/**
+ * Get notes within the specified range
+ */
+export function getNotesInRange(lowerLimit, upperLimit) {
+    return allNotes.slice(lowerLimit, upperLimit + 1);
+}
+
+/**
+ * Get a specific note by index within the range
+ */
+export function getNoteByIndex(lowerLimit, upperLimit, index) {
+    const notes = getNotesInRange(lowerLimit, upperLimit);
+    // Ensure index is within bounds
+    const clampedIndex = Math.max(0, Math.min(index, notes.length - 1));
+    return notes[clampedIndex];
 }
 
 /**

@@ -9,7 +9,8 @@ let state = {
     selectedKeyIndices: [...DEFAULTS.selectedKeyIndices],
     staffDuration: DEFAULTS.staffDuration,
     answerDuration: DEFAULTS.answerDuration,
-    includeLedgerLines: DEFAULTS.includeLedgerLines,
+    lowerLimit: DEFAULTS.lowerLimit,
+    upperLimit: DEFAULTS.upperLimit,
     currentAnswer: '',
     cycleInterval: null,
     answerTimeout: null
@@ -36,8 +37,12 @@ export function getAnswerDuration() {
     return state.answerDuration;
 }
 
-export function getIncludeLedgerLines() {
-    return state.includeLedgerLines;
+export function getLowerLimit() {
+    return state.lowerLimit;
+}
+
+export function getUpperLimit() {
+    return state.upperLimit;
 }
 
 export function getCurrentAnswer() {
@@ -73,8 +78,12 @@ export function setAnswerDuration(duration) {
     state.answerDuration = duration;
 }
 
-export function setIncludeLedgerLines(include) {
-    state.includeLedgerLines = include;
+export function setLowerLimit(limit) {
+    state.lowerLimit = limit;
+}
+
+export function setUpperLimit(limit) {
+    state.upperLimit = limit;
 }
 
 export function setCurrentAnswer(answer) {
@@ -157,7 +166,8 @@ export function resetState() {
         selectedKeyIndices: [...DEFAULTS.selectedKeyIndices],
         staffDuration: DEFAULTS.staffDuration,
         answerDuration: DEFAULTS.answerDuration,
-        includeLedgerLines: DEFAULTS.includeLedgerLines,
+        lowerLimit: DEFAULTS.lowerLimit,
+        upperLimit: DEFAULTS.upperLimit,
         currentAnswer: '',
         cycleInterval: null,
         answerTimeout: null
